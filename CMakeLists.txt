@@ -7,7 +7,8 @@ include_directories(.)
 
 add_executable(vm
         macros.h
-        vm.c)
+        vm.c
+        practice.c)
 if(MSVC)
     target_compile_options(vm PRIVATE /Zi)
     target_link_options(vm PRIVATE /DEBUG)

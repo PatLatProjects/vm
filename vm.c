@@ -41,8 +41,11 @@
 BOOL
 GetPrivilege  (
     VOID
+
     )
 {
+
+
     struct {
         DWORD Count;
         LUID_AND_ATTRIBUTES Privilege [1];
@@ -548,8 +551,40 @@ full_virtual_memory_test (
     VirtualFree (p, 0, MEM_RELEASE);
 
     return;
-}
+//Enum is a data type, can assign certain number of bits to vars
+    // Gives arbitrary numbers behind the scenes using the define method
+enum STATE
+{
+    FREE,
+    ACTIVE,
+    STANDBY,
+    MODIFIED
+};
+// Four states use #define to eval all # statements first in code, all numbers are arbitrary numerical IDs
+#define FREE 0
+#define ACTIVE 1
+#define STANDBY 2
+#define MODIFIED 3
 
+    //, long is a 32 bit signed integer, 4 bytes (8bits), capital for types, lower for names, use unsigned long a lot
+    // ULONG, unsigned long, add 64 = 64 bit integer, ULONG_PTR, matches size of register on the computer
+ typedef struct {
+
+    UCHAR state:2; //only uses two bits
+    UCHAR stateTwo:2; //struct size with this copy is <= 1 ULONG64 because of bit specification (stay within 64 for 1), compiler fields together
+
+
+
+
+
+} PFN, *PPFN; // creates a struct with name pfn, ppfn is a pointer;
+    PFN hi = q;
+    hi.state = FREE;
+
+
+
+
+}
 VOID 
 main (
     int argc,

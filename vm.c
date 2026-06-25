@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
+#include "macros.h"
 
 //
 // This define enables code that lets us create multiple virtual address
@@ -561,29 +562,54 @@ enum STATE
     MODIFIED
 };
 // Four states use #define to eval all # statements first in code, all numbers are arbitrary numerical IDs
-#define FREE 0
-#define ACTIVE 1
-#define STANDBY 2
-#define MODIFIED 3
+// #define FREE 0
+// #define ACTIVE 1
+// #define STANDBY 2
+// #define MODIFIED 3
+#define PAGE_SIZE 4096
+#define PHYSICAL_MEMORY_BYTES (PAGE_SIZE * 180)
+#define NUMBER_OF_PFNS (PHYSICAL_MEMORY_BYTES / PAGE_SIZE)
 
     //, long is a 32 bit signed integer, 4 bytes (8bits), capital for types, lower for names, use unsigned long a lot
     // ULONG, unsigned long, add 64 = 64 bit integer, ULONG_PTR, matches size of register on the computer
+    // defining specific bits works between ULONG and enum, compiler treats enum as ULONG
+// fill in with different states for PTE
+
+typedef struct
+{
+ // TODO create my own PTE states enum
+    // need to know if pages are linked or not
+    // valid is one of the states (has a mapping)
+    //frame num is index of pfn
+    ULONG64 frame_number:40;
+}PTE, *PPTE ;
+// TODO write a PTE from PFN, PFN from PTE function and move structs to the top //TODO makes a PTE base too, also convert VAs to PTE and PTE
+   // to VAs
+typedef struct
+{
+    LIST_ENTRY entry;
+    ULONG64 size;
+
+}LISTHEAD, *PLISTHEAD ;
  typedef struct {
 
-    UCHAR state:2; //only uses two bits
-    UCHAR stateTwo:2; //struct size with this copy is <= 1 ULONG64 because of bit specification (stay within 64 for 1), compiler fields together
-
-
-
+     enum STATE state:2; //only uses two bits
+     PPTE pte;
+     //struct from macros
+     LIST_ENTRY entry;
 
 
 } PFN, *PPFN; // creates a struct with name pfn, ppfn is a pointer;
-    PFN hi = q;
+    LISTHEAD free_list;
+    PFN hi;
     hi.state = FREE;
+    //.entry here prevents it from happening at the beginning of the enum struct
+    InsertHeadList(&free_list.entry, &hi.entry);
+
+    PPFN pfn_base = malloc(sizeof(PFN) * NUMBER_OF_PFNS);
 
 
-
-
+    // need to link PTE location to the PFN
 }
 VOID 
 main (
